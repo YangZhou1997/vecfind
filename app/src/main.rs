@@ -1,6 +1,4 @@
 extern crate fnv;
-#[macro_use]
-extern crate lazy_static;
 extern crate failure;
 extern crate rand;
 pub mod utils;
@@ -297,28 +295,15 @@ fn my_find<'a>(acls: &'a Vec<Acl>, flow: &Flow) -> Option<&'a Acl>{
     None
 }
 
-// thread_local! {
-//     pub static PKT_COUNT: RefCell<usize> = {
-//         let m:usize = 0;
-//         RefCell::new(m)
-//     };
-// }
 fn acl_match(flow: &Flow) -> bool {
 
 	// println!("{}", flow);
-    FLOW_CACHE2.with(|flow_cache2| {
-		let flow_cache2_lived = flow_cache2.borrow();
-		if let Some(s) = flow_cache2_lived.get(&flow) {
-            // PKT_COUNT.with(|pkt_count| {
-            //     let num = *(pkt_count.borrow());
-            //     if num % (1024) == 0 {
-            //         println!("{}: {}", num, flow);
-            //     }
-            //     (*pkt_count.borrow_mut()) += 1;
-            // });
-			*s
-		}else {
-			drop(flow_cache2_lived);
+    // FLOW_CACHE2.with(|flow_cache2| {
+		// let flow_cache2_lived = flow_cache2.borrow();
+		// if let Some(s) = flow_cache2_lived.get(&flow) {
+		// 	*s
+		// }else {
+		// 	drop(flow_cache2_lived);
 
 			let mut flag = false;
 		    ACLS.with(|acls| {
@@ -333,21 +318,21 @@ fn acl_match(flow: &Flow) -> bool {
 		        } else {
 		            flag = false; // drop
 		        }
-				FLOW_CACHE2.with(|flow_cache2| {
-					if flow_cache2.borrow().len() < 200000 {
-			    	    (*flow_cache2.borrow_mut()).insert(*flow, flag);
-					}
-				});
+				// FLOW_CACHE2.with(|flow_cache2| {
+				// 	if flow_cache2.borrow().len() < 200000 {
+			    // 	    (*flow_cache2.borrow_mut()).insert(*flow, flag);
+				// 	}
+				// });
 				flag
 		    })
-		}
-	})
+		// }
+	// })
 }
 
 fn main() {
     let mut rng = rand::thread_rng();
     let mut count_match: usize = 0;
-    for i in 0..(4 * 1024 * 1024){
+    for i in 0..(2 * 1024 * 1024){
         let src_ip: u32 = rng.gen();
         let dst_ip: u32 = rng.gen();
         let src_port: u16 = rng.gen();

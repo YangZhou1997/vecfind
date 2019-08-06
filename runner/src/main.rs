@@ -5,24 +5,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 extern crate aesm_client;
-extern crate byteorder;
 extern crate enclave_runner;
-extern crate libc;
 extern crate sgxs_loaders;
-use std::time::{Duration, Instant};
-
 use aesm_client::AesmClient;
 use enclave_runner::usercalls::{SyncListener, SyncStream, UsercallExtension};
 use enclave_runner::EnclaveBuilder;
 use sgxs_loaders::isgx::Device as IsgxDevice;
-use std::io;
-
-use byteorder::{NetworkEndian, ReadBytesExt};
-use std::io::{Error, ErrorKind, Read, Result as IoResult, Write};
-use std::mem::size_of;
-use std::net::Shutdown;
-use std::net::{Ipv4Addr, Ipv6Addr, SocketAddr, TcpListener, TcpStream};
 use std::thread;
+use std::time::{Duration, Instant};
 
 fn usage(name: String) {
     println!("Usage:\n{} <path_to_sgxs_file>", name);
